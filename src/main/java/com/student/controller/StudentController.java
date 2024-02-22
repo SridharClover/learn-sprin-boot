@@ -4,6 +4,8 @@ import com.student.entity.Student;
 import com.student.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +26,12 @@ public class StudentController {
     }
 
     @GetMapping("/student/{studentId}")
-    public Student listSingleStudent(@PathVariable("studentId") String studentId){
-        return studentService.fetchSingleUser(studentId);
+    public ResponseEntity<Student> listSingleStudent(@PathVariable("studentId") String studentId){
+        Student student = studentService.fetchSingleUser(studentId);
+        if(student == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(student,HttpStatus.OK);
     }
 
     @PutMapping("/student/{studentId}")
