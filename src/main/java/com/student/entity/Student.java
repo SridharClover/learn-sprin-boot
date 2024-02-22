@@ -1,4 +1,4 @@
-package com.institution.institution.entity;
+package com.student.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -10,7 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
-@Entity(name = "user")
+@Entity(name = "student")
 @Data
 public class Student {
 
@@ -42,7 +42,7 @@ public class Student {
     private String password;
 
     @Column(nullable = false)
-    private boolean isActive = true;
+    private Boolean isActive = true;
 
     @CreatedBy
     private String createdBy = "System";

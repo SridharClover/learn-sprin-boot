@@ -1,6 +1,6 @@
-package com.institution.institution.service;
+package com.student.service;
 
-import com.institution.institution.entity.Student;
+import com.student.entity.Student;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ public interface StudentService {
 
     Student updateUser(Student user, String userId);
 
-    String deleteUser(String userId);
+    void deleteUser(String userId);
 }

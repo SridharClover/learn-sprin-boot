@@ -1,7 +1,7 @@
-package com.institution.institution.controller;
+package com.student.controller;
 
-import com.institution.institution.entity.Student;
-import com.institution.institution.service.StudentService;
+import com.student.entity.Student;
+import com.student.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +29,13 @@ public class StudentController {
     }
 
     @PutMapping("/student/{studentId}")
-    public Student updateStudent(@RequestBody Student student, @PathVariable("studentId") String studentId){
+    public Student updateStudent(@Valid @RequestBody Student student, @PathVariable("studentId") String studentId){
         return studentService.updateUser(student,studentId);
     }
 
     @DeleteMapping("/student/{studentId}")
-    public String deleteStudent(@PathVariable("studentId") String studentId){
-        return studentService.deleteUser(studentId);
+    public void deleteStudent(@PathVariable("studentId") String studentId){
+         studentService.deleteUser(studentId);
     }
 
 }
