@@ -34,6 +34,10 @@ public class StudentServiceImlp implements StudentService{
         Optional<Student> oldStudent = studentRepository.findById(userId);
         if(oldStudent.isPresent()){
             Student student1 = oldStudent.get();
+            student1.setFirstName(student.getFirstName());
+            student1.setLastName(student.getLastName());
+            student1.setEmail(student.getEmail());
+            student1.setPassword(student.getPassword());
             return studentRepository.save(student1);
         }else {
             return null;
