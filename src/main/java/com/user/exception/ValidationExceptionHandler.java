@@ -1,4 +1,4 @@
-package com.student.exception;
+package com.user.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
