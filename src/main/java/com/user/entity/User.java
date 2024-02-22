@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 
-@Entity(name = "student")
+@Entity(name = "user")
 @Data
 @EntityListeners(AuditingEntityListener.class)
 public class User {
