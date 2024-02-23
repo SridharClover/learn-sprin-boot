@@ -2,6 +2,7 @@ package com.user.service;
 
 import com.user.entity.User;
 import com.user.repository.UserRepository;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,8 @@ public class UserServiceImlp implements UserService {
     @Autowired
     UserRepository userRepository;
     @Override
-    public User createUser(User student) {
-        return userRepository.save(student);
+    public User createUser(User user) {
+        return userRepository.save(user);
     }
 
     @Override
@@ -25,8 +26,7 @@ public class UserServiceImlp implements UserService {
 
     @Override
     public User fetchSingleUser(String userId) {
-        Optional<User> user = userRepository.findById(userId);
-        return user.orElse(null);
+        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
     }
 
     @Override

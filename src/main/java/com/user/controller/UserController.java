@@ -20,18 +20,14 @@ public class UserController {
         return studentService.createUser(student);
     }
 
-    @GetMapping("/student")
+    @GetMapping("/users")
     public List listAllUser(){
         return studentService.fetchAllUser();
     }
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity<User> listSingleUser(@PathVariable("userId") String studentId){
-        User student = studentService.fetchSingleUser(studentId);
-        if(student == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(student,HttpStatus.OK);
+    public User listSingleUser(@PathVariable("userId") String studentId){
+        return  studentService.fetchSingleUser(studentId);
     }
 
     @PutMapping("/users/{userId}")

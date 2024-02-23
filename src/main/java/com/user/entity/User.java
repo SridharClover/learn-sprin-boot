@@ -1,10 +1,16 @@
 package com.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
@@ -39,6 +45,7 @@ public class User {
     @Column(nullable = false, length = 50)
     @NotEmpty(message = "Password is required")
     @Size(min = 6, max = 10, message = "Password must contain 6 to 10 chars")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(nullable = false)
@@ -52,20 +59,10 @@ public class User {
 
 
     @Column(updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
     private Date createdDateTime;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @LastModifiedDate
     private Date updatedDateTime;
 
-    @PrePersist
-    protected void onCreate(){
-        createdDateTime = new Date();
-        updatedDateTime = createdDateTime;
-    }
-
-    @PreUpdate
-    protected void onUpdate(){
-        updatedDateTime = new Date();
-    }
 }
