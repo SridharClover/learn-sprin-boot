@@ -42,9 +42,9 @@ public class User {
     @Pattern(regexp = "(?=.*\\d).{10,}$", message = "Mobile is Invalid")
     private String mobileNo;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 100)
     @NotEmpty(message = "Password is required")
-    @Size(min = 6, max = 10, message = "Password must contain 6 to 10 chars")
+    @Size(min = 6,  message = "Password must contain 6 to 10 chars")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 

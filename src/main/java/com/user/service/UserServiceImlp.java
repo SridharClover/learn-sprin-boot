@@ -37,17 +37,12 @@ public class UserServiceImlp implements UserService {
 
     @Override
     public User updateUser(User user, String userId) {
-        Optional<User> oldUser = userRepository.findById(userId);
-        if(oldUser.isPresent()){
-            User user1 = oldUser.get();
-            user1.setFirstName(user.getFirstName());
-            user1.setLastName(user.getLastName());
-            user1.setEmail(user.getEmail());
-            user1.setPassword(user.getPassword());
-            return userRepository.save(user1);
-        }else {
-            return null;
-        }
+        User oldUser = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));;
+        oldUser.setFirstName(user.getFirstName());
+        oldUser.setLastName(user.getLastName());
+        oldUser.setEmail(user.getEmail());
+        oldUser.setPassword(user.getPassword());
+        return userRepository.save(oldUser);
     }
 
     @Override
