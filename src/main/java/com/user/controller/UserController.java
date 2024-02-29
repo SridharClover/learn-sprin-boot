@@ -41,4 +41,9 @@ public class UserController {
          studentService.deleteUser(studentId);
     }
 
+    @PostMapping("/login")
+    public String userLogin(@RequestHeader("Authorization") String authorization){
+        return studentService.checkUserLogin(authorization);
+    }
+
 }

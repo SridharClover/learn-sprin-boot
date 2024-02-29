@@ -32,12 +32,12 @@ public class User {
     @NotEmpty(message = "Last name is required")
     private String lastName;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, unique = true)
     @NotEmpty(message = "Email Id is required")
     @Email(message = "Invalid Email")
     private String email;
 
-    @Column(nullable = false, length = 12)
+    @Column(nullable = false, length = 12, unique = true)
     @NotEmpty(message = "Mobile No. is required")
     @Pattern(regexp = "(?=.*\\d).{10,}$", message = "Mobile is Invalid")
     private String mobileNo;
