@@ -5,8 +5,10 @@ import com.user.repository.UserRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +24,13 @@ public class UserServiceImlp implements UserService {
     PasswordEncoder passwordEncoder;
     @Override
     public User createUser(User user) {
+        User user1 = userRepository.findByEmail(user.getEmail());
+        if(user1!=null){
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,"Email Already Exist");
+        }
+        if(userRepository.findByMobileNo(user.getMobileNo()) != null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Mobile No Already Exist");
+        }
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
         return userRepository.save(user);
@@ -50,7 +59,6 @@ public class UserServiceImlp implements UserService {
     @Override
     public void deleteUser(String userId) {
         userRepository.deleteById(userId);
-
     }
 
     @Override
