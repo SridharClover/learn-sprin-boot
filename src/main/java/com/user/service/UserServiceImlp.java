@@ -26,10 +26,10 @@ public class UserServiceImlp implements UserService {
     public User createUser(User user) {
         User user1 = userRepository.findByEmail(user.getEmail());
         if(user1!=null){
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,"Email Already Exist");
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Email Already Exist");
         }
         if(userRepository.findByMobileNo(user.getMobileNo()) != null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Mobile No Already Exist");
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Mobile No Already Exist");
         }
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
