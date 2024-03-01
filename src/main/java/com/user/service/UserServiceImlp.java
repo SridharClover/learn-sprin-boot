@@ -1,11 +1,13 @@
 package com.user.service;
 
+import com.user.api.response.SuccessResponse;
 import com.user.entity.User;
 import com.user.repository.UserRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,15 +26,13 @@ public class UserServiceImlp implements UserService {
     PasswordEncoder passwordEncoder;
     @Override
     public User createUser(User user) {
-        if(userRepository.existsByEmail(user.getEmail())){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"Email Already Exist");
-        }
-        if(userRepository.existsByMobileNo(user.getMobileNo())){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"Mobile No Already Exist");
-        }
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
-        return userRepository.save(user);
+        try {
+            return userRepository.save(user);
+        }catch (Exception ex){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,ex.getMessage());
+        }
     }
 
     @Override
@@ -61,18 +61,29 @@ public class UserServiceImlp implements UserService {
     }
 
     @Override
-    public String checkUserLogin(String credentials) {
-        String pair=new String(Base64.decodeBase64(credentials.substring(6)));
-        String userName=pair.split(":")[0];
-        String password=pair.split(":")[1];
-        User user = userRepository.findByEmail(userName);
-        if(user!=null){
-            String storedPassword = user.getPassword();
-            if(passwordEncoder.matches(password, storedPassword)){
-                return "Login successful";
+    public SuccessResponse checkUserLogin(String credentials) {
+
+        if(!credentials.contains("Basic ")){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Invalid Login Credentials");
+        }else {
+            String pair = new String(Base64.decodeBase64(credentials.substring(6)));
+            if(!pair.contains(":")){
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Invalid Login Credentials");
+            }else {
+                String userName = pair.split(":")[0];
+                String password = pair.split(":")[1];
+                User user = userRepository.findByEmail(userName);
+                if (user != null) {
+                    String storedPassword = user.getPassword();
+                    if (passwordEncoder.matches(password, storedPassword)) {
+                        return SuccessResponse.builder()
+                                .message("Login Successful")
+                                .build();
+                    }
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Invalid Login Credentials");
+                }
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Invalid Login Credentials");
             }
-            return "Invalid Password";
         }
-        return "Invalid User Name";
     }
 }

@@ -1,5 +1,6 @@
 package com.user.service;
 
+import com.user.api.response.SuccessResponse;
 import com.user.entity.User;
 
 import java.util.List;
@@ -15,5 +16,5 @@ public interface UserService {
 
     void deleteUser(String userId);
 
-    String checkUserLogin(String credentials);
+    SuccessResponse checkUserLogin(String credentials);
 }

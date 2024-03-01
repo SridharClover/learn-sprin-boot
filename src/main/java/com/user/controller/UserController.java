@@ -1,5 +1,6 @@
 package com.user.controller;
 
+import com.user.api.response.SuccessResponse;
 import com.user.entity.User;
 import com.user.service.UserService;
 import jakarta.validation.Valid;
@@ -42,7 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String userLogin(@RequestHeader("Authorization") String authorization){
+    public SuccessResponse userLogin(@RequestHeader("Authorization") String authorization){
         return studentService.checkUserLogin(authorization);
     }
 

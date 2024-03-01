@@ -1,5 +1,6 @@
 package com.user.exception;
 
+import com.user.api.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -30,12 +31,18 @@ public class ValidationExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(ex.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException ex){
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(ex.getReason())
+                .build();
+        return ResponseEntity.status(ex.getStatusCode()).body(errorResponse);
     }
 }
