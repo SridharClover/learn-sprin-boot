@@ -24,11 +24,10 @@ public class UserServiceImlp implements UserService {
     PasswordEncoder passwordEncoder;
     @Override
     public User createUser(User user) {
-        User user1 = userRepository.findByEmail(user.getEmail());
-        if(user1!=null){
+        if(userRepository.existsByEmail(user.getEmail())){
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Email Already Exist");
         }
-        if(userRepository.findByMobileNo(user.getMobileNo()) != null){
+        if(userRepository.existsByMobileNo(user.getMobileNo())){
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Mobile No Already Exist");
         }
         String hashedPassword = passwordEncoder.encode(user.getPassword());
