@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ErrorResponse {
-    private String message;
+public class LoginResponse {
+    private String token;
+    private Long expiresIn;
 }

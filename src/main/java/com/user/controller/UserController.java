@@ -1,12 +1,12 @@
 package com.user.controller;
 
-import com.user.api.response.SuccessResponse;
+import com.user.api.request.LoginRequest;
+import com.user.api.response.LoginResponse;
 import com.user.entity.User;
+import com.user.service.JwtService;
 import com.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,36 +15,42 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     @Autowired
-    UserService studentService;
+    UserService userService;
+    @Autowired
+    JwtService jwtService;
 
-    @PostMapping()
+    @PostMapping("/signup")
     public User createUser(@Valid @RequestBody User student){
-        return studentService.createUser(student);
+        return userService.createUser(student);
     }
 
     @GetMapping()
-    public List listAllUser(){
-        return studentService.fetchAllUser();
+    public List<User> listAllUser(){
+        return userService.fetchAllUser();
     }
 
     @GetMapping("/{userId}")
     public User listSingleUser(@PathVariable("userId") String studentId){
-        return  studentService.fetchSingleUser(studentId);
+        return  userService.fetchSingleUser(studentId);
     }
 
     @PutMapping("/{userId}")
     public User updateUser(@Valid @RequestBody User student, @PathVariable("userId") String studentId){
-        return studentService.updateUser(student,studentId);
+        return userService.updateUser(student,studentId);
     }
 
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable("userId") String studentId){
-         studentService.deleteUser(studentId);
+         userService.deleteUser(studentId);
     }
 
     @PostMapping("/login")
-    public SuccessResponse userLogin(@RequestHeader("Authorization") String authorization){
-        return studentService.checkUserLogin(authorization);
+    public LoginResponse userLogin(@RequestBody LoginRequest loginRequest){
+        User authnticatedUser = userService.checkUserLogin(loginRequest);
+        return LoginResponse.builder()
+                .token(jwtService.generateToken(authnticatedUser))
+                .expiresIn(jwtService.getExpirationTime())
+                .build();
     }
 
 }
