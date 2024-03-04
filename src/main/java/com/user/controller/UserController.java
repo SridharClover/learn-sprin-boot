@@ -19,7 +19,7 @@ public class UserController {
     @Autowired
     JwtService jwtService;
 
-    @PostMapping("/signup")
+    @PostMapping()
     public User createUser(@Valid @RequestBody User student){
         return userService.createUser(student);
     }
