@@ -25,10 +25,10 @@ import java.util.List;
 public class SecurityConfig  {
 
     @Autowired
-    AuthenticationProvider authenticationProvider;
+    JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
-    JwtAuthenticationFilter jwtAuthenticationFilter;
+    JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
@@ -40,7 +40,7 @@ public class SecurityConfig  {
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
